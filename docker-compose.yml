@@ -1,0 +1,25 @@
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    container_name: doc-reader-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: docreader
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: jayesh@345
+
+    volumes:
+      - ytpgdata:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U postgres -d docreader"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  ytpgdata:
+
